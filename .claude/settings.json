@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(legado/**)",
+      "Write(legado/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && dotnet test --nologo 1>&2 || exit 2"
+          }
+        ]
+      }
+    ]
+  }
+}

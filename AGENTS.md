@@ -1,37 +1,44 @@
-# AGENTS.md · Pedidos Web
-
-Instrucciones para agentes de IA que trabajan en este repositorio (Claude Code, Codex, Copilot y otros). Las personas del equipo también las siguen.
+# AGENTS.md
 
 ## Proyecto
+Portal web "Pedidos": API REST en ASP.NET Core (.NET 10), modernización de un sistema legado en Delphi.
+Los datos son ficticios y viven en memoria (sin base de datos).
 
-Portal web de pedidos de una distribuidora. Moderniza **Pedidos Legado** (Delphi + DBISAM) hacia .NET y, desde la Unidad 5, PostgreSQL. El detalle del negocio está en `README.md`.
-
-## Stack y comandos
-
-- .NET 10, C#, xUnit. IDE de referencia: JetBrains Rider.
+## Comandos
 - Compilar: `dotnet build`
-- Tests: `dotnet test`
-- Ejecuta `dotnet test` después de cada cambio y antes de decir que terminaste.
+- Testear: `dotnet test`
+- Ejecutar la API: `dotnet run --project src/PedidosWeb.Api`
+
+## Estilo de código
+- Nombres de tipos, métodos y propiedades en español (`Pedido`, `ObtenerPorId`, `ClienteId`).
+- Dinero: `decimal` en CLP, sin decimales. Nunca `double` ni `float`.
+- Fechas: `DateOnly` (hora local de Chile, sin hora).
+- `PedidosWeb.Core`: lógica de dominio y repositorios. `PedidosWeb.Api`: solo HTTP (rutas, parámetros, códigos de respuesta).
+
+## Tests
+- xUnit, en `tests/PedidosWeb.Core.Tests`, espejando la carpeta de Core (`Pedidos/`, `Folios/`).
+- Nombre: `Metodo_Escenario_ResultadoEsperado`.
+- Los tests se ejecutan solo antes de cada commit y luego de cada cambio finalizado.
+
+## Seguridad
+- Nunca secretos ni claves en el código.
+
+## Reglas de trabajo
+- Toda funcionalidad parte de una spec aprobada en `specs/<historia>/spec.md`.
+- Un test xUnit por criterio de aceptación.
+- Nada de commit, push ni merge: eso lo hace siempre una persona, después de leer el diff.
+- Sin preguntar, solo puedo leer archivos y ejecutar `dotnet build` / `dotnet test`. Todo cambio de archivos requiere aprobación.
+- Plan antes de editar: antes de modificar un archivo, explico mi plan en máximo 5 viñetas y espero la aprobación.
+- Si algo no está en la spec, propongo una opción, la anoto en "Preguntas abiertas" y espero el OK. No asumo.
+- Si una regla del negocio no está escrita, pregunto. No la invento ni la supongo.
 
 ## Reglas del equipo
-
-1. **Idioma.** Responde, comenta el código y escribe los mensajes en español de Chile. Clases y métodos del dominio van en español (`FormatearFolio`, `CalcularTotal`).
-2. **Plan antes de editar.** Antes de modificar un archivo, explica tu plan en máximo 5 viñetas y espera mi aprobación.
-3. **Nada de commit, push ni merge.** Eso lo hace siempre una persona, después de leer el diff.
-4. **Cada cambio de comportamiento lleva su test xUnit.** Si cambias una regla, el test que la prueba cambia en el mismo cambio.
-5. **No agregues paquetes NuGet** sin preguntar primero.
-6. **Solo trabajas en `src/`, `tests/` y `docs/`.** No toques la configuración del IDE (`.idea/`), ni `AGENTS.md`, ni archivos fuera del repositorio.
-7. **Dinero en pesos chilenos.** Los montos son enteros: usa `decimal` sin decimales y nunca `double` ni `float`.
-8. **Si una regla del negocio no está escrita, pregunta.** No la inventes ni la supongas.
-
-## Estructura
-
-- `src/PedidosWeb.Core/`: lógica de dominio, sin dependencias de infraestructura.
-- `tests/PedidosWeb.Core.Tests/`: tests xUnit. Un archivo de tests por clase.
-- `docs/`: documentación del equipo (por ejemplo, `docs/mapa-sdlc.md`).
+- Idioma: respondo, comento el código y escribo los mensajes en español de Chile. Las clases y los métodos del dominio van en español (`FormatearFolio`, `CalcularTotal`).
+- Cada cambio de comportamiento lleva su test xUnit. Si cambia una regla, el test que la prueba cambia en el mismo cambio.
+- No agrego paquetes NuGet sin preguntar primero.
+- Solo trabajo en `src/`, `tests/`, `docs/`, `specs/`, `legado/`, `.claude/`, `migracion/`. No toco la configuración del IDE (`.idea/`), ni `AGENTS.md`, ni archivos fuera del repositorio.
 
 ## Definition of Done
-
 - Compila sin warnings nuevos.
 - `dotnet test` en verde.
 - Cada regla del README tocada tiene su test.
